@@ -1,35 +1,66 @@
 const typeDefs = `
-  type Book {
-    authors: [String]
+  type Category {
+    _id: ID
+    name: String
+  }
+
+  type Product {
+    _id: ID
+    name: String
     description: String
-    bookId: String
     image: String
-    link: String
-    title: String
+    quantity: Int
+    price: Float
+    category: Category
+  }
+
+  type Order {
+    _id: ID
+    purchaseDate: String
+    products: [Product]
   }
 
   type User {
-    username: String
+    _id: ID
+    firstName: String
+    lastName: String
     email: String
-    password: String
-    savedBooks: [Book]
+    orders: [Order]
+  }
+
+  type Checkout {
+    session: ID
   }
 
   type Auth {
-    token: String
+    token: ID
     user: User
   }
 
+  input ProductInput {
+    _id: ID
+    purchaseQuantity: Int
+    name: String
+    image: String
+    price: Float
+    quantity: Int
+  }
 
   type Query {
-    getMe: User
+    categories: [Category]
+    products(category: ID, name: String): [Product]
+    product(_id: ID!): Product
+    user: User
+    order(_id: ID!): Order
+    checkout(products: [ProductInput]): Checkout
   }
 
   type Mutation {
-    createUser(username: String!, email: String!, password: String!): Auth
-    login(username: String, email: String, password: String!): Auth
-    save(authors: [String], description: String, bookId: String, image: String, link: String, title: String): User
-    delete(bookId: String!): User
+    addUser(firstName: String!, lastName: String!, email: String!, password: String!): Auth
+    addOrder(products: [ID]!): Order
+    updateUser(firstName: String, lastName: String, email: String, password: String): User
+    updateProduct(_id: ID!, quantity: Int!): Product
+    login(email: String!, password: String!): Auth
   }
 `;
 
