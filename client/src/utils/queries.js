@@ -16,6 +16,22 @@ export const QUERY_PRODUCTS = gql`
   }
 `;
 
+export const QUERY_POPULAR_PRODUCTS = gql`
+  query getPopularProducts {
+    popular {
+      _id
+      name
+      description
+      price
+      quantity
+      image
+      category {
+        _id
+      }
+    }
+  }
+`;
+
 export const QUERY_CHECKOUT = gql`
   query getCheckout($products: [ProductInput]) {
     checkout(products: $products) {

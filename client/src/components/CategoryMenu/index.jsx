@@ -4,6 +4,7 @@ import { useStoreContext } from '../../utils/GlobalState';
 import {
   UPDATE_CATEGORIES,
   UPDATE_CURRENT_CATEGORY,
+  UPDATE_MOST_POPULAR,
 } from '../../utils/actions';
 import { QUERY_CATEGORIES } from '../../utils/queries';
 import { idbPromise } from '../../utils/helpers';
@@ -41,6 +42,14 @@ function CategoryMenu() {
     });
   };
 
+  const handlePopularClick = () => {
+    console.log("Hello")
+    dispatch({
+      type: UPDATE_MOST_POPULAR,
+      currentCategory: "",
+    });
+  };
+
   return (
     <div>
       <h2>Choose a Category:</h2>
@@ -56,6 +65,9 @@ function CategoryMenu() {
       ))}
       <button onClick={() => { handleClick('') }}>
         All
+      </button>
+      <button onClick={() => { handlePopularClick() }}>
+        Most Popular
       </button>
     </div>
   );

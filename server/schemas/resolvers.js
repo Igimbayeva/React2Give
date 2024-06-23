@@ -22,6 +22,18 @@ const resolvers = {
 
       return await Product.find(params).populate('category');
     },
+    popular: async (parent, args) => {
+
+      const allProducts = await Product.find().populate('category');
+      const allOrders = await Order.find();
+
+
+      console.log(allProducts)
+      console.log(allOrders)
+
+      return allProducts;
+
+    },
     product: async (parent, { _id }) => {
       return await Product.findById(_id).populate('category');
     },
