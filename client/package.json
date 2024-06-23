@@ -12,6 +12,10 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.15",
+    "@chakra-ui/react": "^2.0.0",  
+    "@emotion/react": "^11.7.1",  
+    "@emotion/styled": "^11.6.0",  
+    "framer-motion": "^6.0.0",  
     "@stripe/stripe-js": "^1.54.0",
     "@testing-library/react": "^14.0.0",
     "graphql": "^16.6.0",
