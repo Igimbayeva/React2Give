@@ -43,7 +43,8 @@ function ProductItem(item) {
       <Link to={`/products/${_id}`}>
         <img
           alt={name}
-          src={`/images/${image}`}
+          // src={`/images/${image}`}
+          src={image.includes("http") ? image : `/images/${image}`}
         />
         <p>{name}</p>
       </Link>

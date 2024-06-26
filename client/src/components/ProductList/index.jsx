@@ -35,18 +35,23 @@ function ProductList() {
   }, [data, loading, dispatch]);
 
   function filterProducts() {
-    if (!currentCategory) {
-      return state.products;
-    }
+    if(currentCategory == "POPULAR") {
+      return dataPopular?.popular || []
 
-    return state.products.filter(
-      (product) => product.category._id === currentCategory
-    );
+    } else {
+      if (!currentCategory) {
+        return state.products;
+      }
+  
+      return state.products.filter(
+        (product) => product.category._id === currentCategory
+      );
+    }
   }
 
   return (
     <div className="my-2">
-      <h2>Our Products:</h2>
+      <h2>Available items:</h2>
       {state.products.length ? (
         <div className="flex-row">
           {filterProducts().map((product) => (
@@ -61,7 +66,7 @@ function ProductList() {
           ))}
         </div>
       ) : (
-        <h3>You haven't added any products yet!</h3>
+        <h3>You haven't added any items yet!</h3>
       )}
       {loading ? <img src={spinner} alt="loading" /> : null}
     </div>

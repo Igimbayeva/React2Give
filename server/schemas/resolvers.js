@@ -1,6 +1,5 @@
 const { User, Product, Category, Order } = require('../models');
-const { signToken, AuthenticationError } = require('../utils/auth');
-const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+const { AuthenticationError } = require('apollo-server-express');
 
 const resolvers = {
   Query: {
@@ -16,23 +15,39 @@ const resolvers = {
 
       if (name) {
         params.name = {
-          $regex: name
+          $regex: name,
+          $options: 'i'  // case-insensitive search
         };
       }
 
       return await Product.find(params).populate('category');
     },
-    popular: async (parent, args) => {
+    popular: async () => {
+      // Aggregate orders to count products
+      const allOrders = await Order.aggregate([
+        { $unwind: '$products' },
+        {
+          $group: {
+            _id: '$products',
+            count: { $sum: 1 }
+          }
+        }
+      ]);
 
+      // Get all products and populate their categories
       const allProducts = await Product.find().populate('category');
-      const allOrders = await Order.find();
 
+      // Map products with their counts from orders
+      const productsArr = allProducts.map(product => {
+        const count = allOrders.find(order => order._id.toString() === product._id.toString())?.count || 0;
+        return { ...product._doc, count };
+      });
 
-      console.log(allProducts)
-      console.log(allOrders)
+      // Filter and sort products by count in descending order
+      const filteredProducts = productsArr.filter(product => product.count > 0);
+      filteredProducts.sort((a, b) => b.count - a.count);
 
-      return allProducts;
-
+      return filteredProducts;
     },
     product: async (parent, { _id }) => {
       return await Product.findById(_id).populate('category');
@@ -49,7 +64,7 @@ const resolvers = {
         return user;
       }
 
-      throw AuthenticationError;
+      throw new AuthenticationError('You are not authenticated');
     },
     order: async (parent, { _id }, context) => {
       if (context.user) {
@@ -61,29 +76,24 @@ const resolvers = {
         return user.orders.id(_id);
       }
 
-      throw AuthenticationError;
+      throw new AuthenticationError('You are not authenticated');
     },
     checkout: async (parent, args, context) => {
       const url = new URL(context.headers.referer).origin;
       await Order.create({ products: args.products.map(({ _id }) => _id) });
-      // eslint-disable-next-line camelcase
-      const line_items = [];
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const product of args.products) {
-        line_items.push({
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: product.name,
-              description: product.description,
-              images: [`${url}/images/${product.image}`]
-            },
-            unit_amount: product.price * 100,
+      const line_items = args.products.map(product => ({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: product.name,
+            description: product.description,
+            images: [`${url}/images/${product.image}`]
           },
-          quantity: product.purchaseQuantity,
-        });
-      }
+          unit_amount: product.price * 100,
+        },
+        quantity: product.purchaseQuantity,
+      }));
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -112,14 +122,14 @@ const resolvers = {
         return order;
       }
 
-      throw AuthenticationError;
+      throw new AuthenticationError('You are not authenticated');
     },
     updateUser: async (parent, args, context) => {
       if (context.user) {
         return await User.findByIdAndUpdate(context.user._id, args, { new: true });
       }
 
-      throw AuthenticationError;
+      throw new AuthenticationError('You are not authenticated');
     },
     updateProduct: async (parent, { _id, quantity }) => {
       const decrement = Math.abs(quantity) * -1;
@@ -130,13 +140,13 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw AuthenticationError;
+        throw new AuthenticationError('Invalid email or password');
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw AuthenticationError;
+        throw new AuthenticationError('Invalid email or password');
       }
 
       const token = signToken(user);

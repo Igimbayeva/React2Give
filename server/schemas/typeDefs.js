@@ -12,6 +12,7 @@ const typeDefs = `
     quantity: Int
     price: Float
     category: Category
+    count: Int  # Add this field for popularity sorting
   }
 
   type Order {
