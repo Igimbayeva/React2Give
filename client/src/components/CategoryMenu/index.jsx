@@ -46,7 +46,7 @@ function CategoryMenu() {
     console.log("Hello")
     dispatch({
       type: UPDATE_MOST_POPULAR,
-      currentCategory: "",
+      currentCategory: "POPULAR",
     });
   };
 
