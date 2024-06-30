@@ -28,6 +28,7 @@ export const QUERY_POPULAR_PRODUCTS = gql`
       category {
         _id
       }
+      count
     }
   }
 `;

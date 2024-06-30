@@ -1,5 +1,7 @@
 const { User, Product, Category, Order } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
+const {signToken, authMiddleware} = require("../utils/auth")
+const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const resolvers = {
   Query: {
@@ -46,6 +48,8 @@ const resolvers = {
       // Filter and sort products by count in descending order
       const filteredProducts = productsArr.filter(product => product.count > 0);
       filteredProducts.sort((a, b) => b.count - a.count);
+
+      // console.log(filteredProducts)
 
       return filteredProducts;
     },
