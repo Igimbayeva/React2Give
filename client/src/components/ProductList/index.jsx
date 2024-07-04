@@ -20,7 +20,7 @@ function ProductList() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (state.currentCategory == "POPULAR") {
+    if (state.currentCategory === "POPULAR") {
       setData(dataPopular)
       setLoading(loadingPopular)
     } else {
@@ -47,7 +47,7 @@ function ProductList() {
   }, [loadingAll, loadingPopular, dataAll, dataPopular, dispatch]);
 
   function filterProducts() {
-    if (currentCategory == "POPULAR") {
+    if (currentCategory === "POPULAR") {
       return dataPopular?.popular || []
     } else {
       if (!currentCategory) {
@@ -66,31 +66,26 @@ function ProductList() {
       {state.products.length ? (
         <div className="flex-row">
           {filterProducts().map((product) => (
-            <>
-              {
-                currentCategory == "POPULAR" ?
-                  (
-                    <ProductItemPopular
-                    key={product._id}
-                    _id={product._id}
-                    image={product.image}
-                    name={product.name}
-                    price={product.price}
-                    quantity={product.quantity}
-                    count={product.count}
-                  />
-                  ) : (
-                    <ProductItem
-                      key={product._id}
-                      _id={product._id}
-                      image={product.image}
-                      name={product.name}
-                      price={product.price}
-                      quantity={product.quantity}
-                    />
-                  )
-              }
-            </>
+            currentCategory === "POPULAR" ? (
+              <ProductItemPopular
+                key={product._id}
+                _id={product._id}
+                image={product.image}
+                name={product.name}
+                price={product.price}
+                quantity={product.quantity}
+                count={product.count}
+              />
+            ) : (
+              <ProductItem
+                key={product._id}
+                _id={product._id}
+                image={product.image}
+                name={product.name}
+                price={product.price}
+                quantity={product.quantity}
+              />
+            )
           ))}
         </div>
       ) : (
