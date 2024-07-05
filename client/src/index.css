@@ -203,6 +203,15 @@ input:focus {
   color: var(--error);
 }
 
+
+.sidebar{
+  transition:all .4s ease-in-out;
+}
+
+#product-list{
+  transition:all .4s ease-in-out;
+}
+
 @media screen and (max-width: 768px) {
   .card {
     width: 100%;
