@@ -63,7 +63,9 @@ function CategoryMenu() {
   }
 
   const handleLeave = () => {
-    document.getElementById("product-list").classList.remove("pl-[150px]")
+    // setTimeout(() => {
+      document.getElementById("product-list").classList.remove("pl-[150px]")
+    // }, 5000)
   }
 
   return (
@@ -95,6 +97,27 @@ function CategoryMenu() {
                   </a>
                 </li>
               ))}
+              {/* ALL */}
+              <li
+                  key={`all-button`}
+                  class="min-w-max"
+                  onClick={() => { handleClick('') }}>
+                  <a href="#" class="relative flex items-center space-x-4 bg-gradient-to-r from-red-800 to-red-600 px-4 py-3 text-white">
+                  <i class="fa-solid fa-table-list"></i>
+                    <span class="-mr-1 font-medium">ALL</span>
+                  </a>
+                </li>
+
+              {/* MOST POPULAR */}
+              <li
+                  key={`popular-button`}
+                  class="min-w-max"
+                  onClick={() => { handlePopularClick() }}>
+                  <a href="#" class="relative flex items-center space-x-4 bg-gradient-to-r from-red-800 to-red-600 px-4 py-3 text-white">
+                  <i class="fa-solid fa-fire"></i>
+                    <span class="-mr-1 font-medium">Most Popular</span>
+                  </a>
+                </li>
             </ul>
           </div>
           <div class="w-max -mb-3">
