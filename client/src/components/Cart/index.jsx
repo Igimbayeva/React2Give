@@ -64,9 +64,9 @@ const Cart = () => {
 
   if (!state.cartOpen) {
     return (
-      <div className="cart-closed bg-lime-400" onClick={toggleCart}>
+      <div className="cart-closed bg-gradient-to-r from-red-800 to-red-600 flex justify-center align-center" onClick={toggleCart}>
         <span role="img" aria-label="trash">
-          🛒
+          <i class="fa-solid fa-gift fa-xl text-4 xl"></i>
         </span>
       </div>
     );
