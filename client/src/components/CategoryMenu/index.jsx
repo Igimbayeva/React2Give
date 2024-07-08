@@ -83,7 +83,7 @@ function CategoryMenu() {
                   onClick={() => {
                     handleClick(item._id);
                   }}>
-                  <a href="#" class="relative flex items-center space-x-4 bg-gradient-to-r from-sky-600 to-cyan-400 px-4 py-3 text-white">
+                  <a href="#" class="relative flex items-center space-x-4 bg-gradient-to-r from-red-800 to-red-600 px-4 py-3 text-white">
                     <i class={
                       categoryIcons.find(category => {
                         if(item.name == category.name) {
